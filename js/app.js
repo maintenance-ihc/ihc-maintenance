@@ -85,21 +85,44 @@ function apiPostJSONP(payload) {
   });
 }
 
-// GET — para leer datos del dashboard
-async function apiGet(params = {}) {
-  // Inyectamos el token en cada GET
+// GET via JSONP — para leer datos del dashboard (evita CORS con dominio restringido)
+function apiGet(params = {}) {
   params._token = IHC_CONFIG.SECRET_TOKEN;
-  const qs  = new URLSearchParams(params).toString();
-  const url = `${IHC_CONFIG.SCRIPT_URL}?${qs}`;
-  const res = await fetch(url);
-  const data = await res.json();
 
-  // Si el servidor rechaza el token, bloqueamos la UI
-  if (data && data.error === "UNAUTHORIZED") {
-    mostrarAccesoDenegado();
-    throw new Error("UNAUTHORIZED");
-  }
-  return data;
+  return new Promise((resolve, reject) => {
+    const callbackName = "__ihcGetCallback_" + Date.now();
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("Timeout — no response from server"));
+    }, 30000);
+
+    function cleanup() {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      const s = document.getElementById("ihcGetJsonpScript");
+      if (s) s.remove();
+    }
+
+    window[callbackName] = function(result) {
+      cleanup();
+      if (result && result.error === "UNAUTHORIZED") {
+        mostrarAccesoDenegado();
+        reject(new Error("UNAUTHORIZED"));
+        return;
+      }
+      resolve(result);
+    };
+
+    const qs     = new URLSearchParams({ ...params, callback: callbackName }).toString();
+    const script = document.createElement("script");
+    script.id    = "ihcGetJsonpScript";
+    script.src   = `${IHC_CONFIG.SCRIPT_URL}?${qs}`;
+    script.onerror = function() {
+      cleanup();
+      reject(new Error("Could not connect to server"));
+    };
+    document.body.appendChild(script);
+  });
 }
 
 // ============================================================
