@@ -5,7 +5,7 @@
 
 const IHC_CONFIG = {
   // 🔴 URL del Apps Script desplegado
-  SCRIPT_URL: "https://script.google.com/a/macros/ihcsuspension.com/s/AKfycbwLEo1aI4p92D1lEzk1vyTgVOr1PKy3Zek1M9qlIr_fYtkSJNLHpA-ldsqVxkYDYt0Cxw/exec",
+  SCRIPT_URL: "https://script.google.com/a/macros/ihcsuspension.com/s/AKfycbzJIKIBGizHpv_Jr5-DZvkycd1qYVhpFWLhiYTqoQBJ7RV6urEv9gA0TpqPyrgeBQG9Kg/exec",
 
   // 🔑 TOKEN SECRETO — Debe coincidir EXACTAMENTE con el de Code.gs
   //    Cámbialo por una cadena larga y aleatoria de tu elección.
