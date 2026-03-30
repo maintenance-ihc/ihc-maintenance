@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IHC – Maintenance Dashboard</title>
+  <meta name="description" content="IHC Maintenance Department Control Panel">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="IHC MTTO">
+  <meta name="theme-color" content="#0d0d14">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="app-header">
+    <a href="index.html" class="header-brand">
+      <div class="header-logo"></div>
+      <span class="header-name">IHC <span>MAINTENANCE</span></span>
+    </a>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link active">REQUESTS</a>
+      <a href="maintenance.html" class="nav-link">DASHBOARD</a>
+    </nav>
+  </header>
+
+  <!-- ===== CONTENT ===== -->
+  <main class="page-container">
+    <h1 class="page-title">Maintenance Dashboard</h1>
+    <p class="page-subtitle">Track and manage active maintenance requests</p>
+
+    <!-- Counters -->
+    <div class="counters">
+      <div class="counter-card c-total">
+        <div class="counter-value" id="cnt-total">—</div>
+        <div class="counter-label">Total</div>
+      </div>
+      <div class="counter-card c-pending">
+        <div class="counter-value" id="cnt-pending">—</div>
+        <div class="counter-label">Pending</div>
+      </div>
+      <div class="counter-card c-progress">
+        <div class="counter-value" id="cnt-progress">—</div>
+        <div class="counter-label">In Progress</div>
+      </div>
+      <div class="counter-card c-done">
+        <div class="counter-value" id="cnt-done">—</div>
+        <div class="counter-label">Completed</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <input
+        class="search-input"
+        id="searchInput"
+        placeholder="Search by machine, department, issue…"
+        type="search"
+      >
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Pending">Pending</button>
+      <button class="filter-btn" data-filter="In Progress">In Progress</button>
+      <button class="filter-btn" data-filter="Completed">Completed</button>
+      <button class="btn-refresh" onclick="fetchRequests()">↻ Refresh</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+      <div id="tableLoader">
+        <div class="spinner"></div>
+        Loading requests…
+      </div>
+      <table id="requestsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Department</th>
+            <th>Machine</th>
+            <th>Issue</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- ===== UPDATE STATUS MODAL ===== -->
+  <div class="modal-overlay" id="updateModal" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <h2 class="modal-title">Update <span>request</span></h2>
+      <form id="updateForm" autocomplete="off">
+        <input type="hidden" id="modalId">
+        <div class="modal-grid">
+
+          <div class="form-group">
+            <label class="form-label">New status</label>
+            <select class="form-select" id="modalStatus" name="status">
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modalTechnician">Assigned technician</label>
+            <input
+              class="form-input"
+              id="modalTechnician"
+              name="technician"
+              placeholder="Technician name"
+              type="text"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modalComment">Comment (optional)</label>
+            <textarea
+              class="form-textarea"
+              id="modalComment"
+              name="comment"
+              placeholder="Observations, actions taken…"
+              style="min-height:70px"
+            ></textarea>
+          </div>
+
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal()" type="button">Cancel</button>
+          <button class="btn-primary-sm" type="submit">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(err => console.log("SW Error: ", err));
+      });
+    }
+  </script>
+</body>
+</html>

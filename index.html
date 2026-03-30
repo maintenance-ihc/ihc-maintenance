@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IHC – Maintenance Request</title>
+  <meta name="description" content="IHC Maintenance Request System">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.json?v=2">
+  <meta name="theme-color" content="#0d0d14">
+  <link rel="stylesheet" href="css/styles.css?v=17">
+</head>
+<body class="screen-fit">
+
+  <header class="app-header">
+    <a href="index.html" class="header-brand">
+      <div class="header-logo"></div>
+      <span class="header-name">IHC <span>MAINTENANCE</span></span>
+    </a>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link active">REQUESTS</a>
+      <a href="maintenance.html" class="nav-link">DASHBOARD</a>
+    </nav>
+  </header>
+
+  <main class="page-container compact-container">
+    <div class="page-header">
+      <h1 class="page-title">New Request</h1>
+      <p class="page-subtitle">Submit a breakdown report or maintenance work order</p>
+    </div>
+
+    <div class="form-card compact-card">
+      <form id="requestForm" autocomplete="off">
+
+        <div class="form-grid-compact">
+          
+          <div class="col-left">
+            <div class="form-group">
+              <label class="form-label" for="department">Department</label>
+              <input class="form-input" id="department" name="department" placeholder="e.g. Production" required type="text">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="machine">Machine / Equipment</label>
+              <input class="form-input" id="machine" name="machine" placeholder="e.g. Compressor A-2" required type="text">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority Level</label>
+              <div class="urgency-group">
+                <input class="urgency-opt" type="radio" id="pri-high" name="priority" value="High">
+                <label class="urgency-label" for="pri-high">🔴 High</label>
+
+                <input class="urgency-opt" type="radio" id="pri-medium" name="priority" value="Medium" checked>
+                <label class="urgency-label" for="pri-medium">🟡 Medium</label>
+
+                <input class="urgency-opt" type="radio" id="pri-low" name="priority" value="Low">
+                <label class="urgency-label" for="pri-low">🟢 Low</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-right">
+            <div class="form-group issue-group">
+              <label class="form-label" for="issue">Issue Description</label>
+              <textarea class="form-textarea issue-textarea" id="issue" name="issue" placeholder="Describe the failure or work required in detail..." required></textarea>
+            </div>
+          </div>
+
+        </div><button class="btn-primary btn-compact" type="submit">Submit Request</button>
+
+        <div id="statusArea" class="status-area"></div>
+
+      </form>
+    </div>
+  </main>
+
+  <script src="js/config.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(err => console.log("SW Error: ", err));
+      });
+    }
+  </script>
+</body>
+  
+</html>
